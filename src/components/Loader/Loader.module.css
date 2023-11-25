@@ -1,0 +1,11 @@
+/* Loader.module.css */
+
+.loader {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.loader p {
+  margin-top: 10px;
+  font-size: 16px;
+}
