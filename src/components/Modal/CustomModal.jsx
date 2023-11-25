@@ -1,72 +1,48 @@
-// CustomModal.jsx
-import { Component } from 'react';
+import { useEffect, useRef } from 'react';
 import basicLightbox from 'basiclightbox';
 
-class CustomModal extends Component {
-  constructor(props) {
-    super(props);
-    this.closeModal = this.closeModal.bind(this);
-    this.createModal = this.createModal.bind(this);
-  }
+const CustomModal = props => {
+  const { largeImageURL, altText, onRequestClose } = props;
+  const instanceRef = useRef(null);
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-    this.createModal();
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-    this.destroyModal();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.isOpen !== this.props.isOpen) {
-      if (this.props.isOpen) {
-        this.openModal();
-      } else {
-        this.closeModal();
+  useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.key === 'Escape') {
+        onRequestClose();
       }
-    }
-  }
+    };
 
-  openModal = () => {
-    this.instance.show();
-  };
+    const createModal = () => {
+      console.dir(basicLightbox);
 
-  closeModal = () => {
-    this.instance.close();
-  };
-
-  createModal = () => {
-    const { largeImageURL, altText } = this.props;
-
-    console.dir(basicLightbox);
-
-    this.instance = basicLightbox.create(`
-      <div class="overlay" onClick="${this.props.onRequestClose}">
-        <div class="modal">
-          <img src="${largeImageURL}" alt="${altText}" />
+      instanceRef.current = basicLightbox.create(`
+        <div class="overlay" onClick="${onRequestClose}">
+          <div class="modal">
+            <img src="${largeImageURL}" alt="${altText}" />
+          </div>
         </div>
-      </div>
-    `);
-    this.render(this.instance);
-  };
+      `);
+      render(instanceRef.current);
+    };
 
-  destroyModal = () => {
-    if (this.instance) {
-      this.instance.close();
-    }
-  };
+    const destroyModal = () => {
+      if (instanceRef.current) {
+        instanceRef.current.close();
+      }
+    };
 
-  handleKeyDown = e => {
-    if (e.key === 'Escape') {
-      this.props.onRequestClose();
-    }
-  };
+    const render = instance => {};
 
-  render() {
-    return null;
-  }
-}
+    document.addEventListener('keydown', handleKeyDown);
+    createModal();
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      destroyModal();
+    };
+  });
+
+  return null;
+};
 
 export default CustomModal;

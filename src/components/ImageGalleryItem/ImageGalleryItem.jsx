@@ -1,4 +1,3 @@
-// ImageGalleryItem.js
 import React, { useState, useEffect } from 'react';
 import styles from './ImageGalleryItem.module.css';
 import ImageModal from 'components/Modal/ImageModal';
